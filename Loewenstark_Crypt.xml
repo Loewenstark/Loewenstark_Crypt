@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Loewenstark_Crypt>
+            <active>true</active>
+            <codePool>community</codePool>
+            <depends>
+                <Mage_Core />
+            </depends>
+        </Loewenstark_Crypt>
+    </modules>
+</config>
