@@ -38,6 +38,11 @@ Contribution
 ------------
 Any contribution to the development is highly welcome. The best possibility to provide any code is to open a [pull request on GitHub](https://help.github.com/articles/using-pull-requests).
 
+Related and Inspired Posts
+--------------------------
+- [OpenMage/magento-lts](https://github.com/OpenMage/magento-lts) [If You're Typing the Word MCRYPT Into Your PHP Code, You're Doing It Wrong](https://github.com/OpenMage/magento-lts/issues/129)
+- [Inchoo/Inchoo_PHP7](https://github.com/Inchoo/Inchoo_PHP7) [mcrypt is deprecated in PHP7.1](https://github.com/Inchoo/Inchoo_PHP7/issues/98)
+
 Developer
 ---------
 * Mathis Klooss
