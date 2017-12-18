@@ -72,7 +72,7 @@ extends Mage_Core_Model_Encryption
         if (!defined('PASSWORD_ARGON2I'))
         {
             // fall back
-            $this->hashByBcrypt($data);
+            return $this->hashByBcrypt($data);
         }
         return password_hash($data, PASSWORD_ARGON2I);
     }
@@ -253,7 +253,7 @@ extends Mage_Core_Model_Encryption
     {
         $enc = 'mcrypt';
         $value = $data;
-        if (strstr($data, ':'))
+        if (substr_count($data, ':') == 1)
         {
             list($enc, $value) = explode(':', $data, 2);
         }
