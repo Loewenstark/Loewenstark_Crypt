@@ -27,7 +27,10 @@ extends Mage_Core_Model_Abstract
         }
         $customer = $event->getCustomer();
         /* @var $customer Mage_Customer_Model_Customer */
-        $this->saveCustomersPassword($customer, 'password');
+        $params = Mage::app()->getRequest()->getParam('account');
+        $pw = trim((string)$params['new_password']);
+        unset($params);
+        $this->saveCustomersPassword($customer, 'new_password', $pw);
     }
 
     /**
@@ -51,16 +54,24 @@ extends Mage_Core_Model_Abstract
      * 
      * @param Mage_Customer_Model_Customer $customer
      */
-    public function saveCustomersPassword(Mage_Customer_Model_Customer $customer, $requestName = 'password')
+    public function saveCustomersPassword(Mage_Customer_Model_Customer $customer, $requestName = 'password', $password = null)
     {
         if (!$this->_getHelper()->canUseStrongPasswordHash())
         {
             return;
         }
         if ($this->_getEncryptor() instanceof Loewenstark_Crypt_Model_Encryption
-                && strlen(Mage::app()->getRequest()->getParam($requestName)) >= 6)
+                && (
+                    strlen(Mage::app()->getRequest()->getParam($requestName)) >= 6
+                    || (!is_null($password) && strlen($password) >= 6)
+                    )
+            )
         {
             $hash = $this->_getHash(Mage::app()->getRequest()->getParam($requestName));
+            if (!is_null($password) && strlen($password) >= 6)
+            {
+                $hash = $this->_getHash($password);
+            }
             $customer->setPasswordHash($hash);
             $customer->getResource()
                     ->saveAttribute($customer, 'password_hash');
