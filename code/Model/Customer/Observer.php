@@ -9,7 +9,7 @@ extends Mage_Core_Model_Abstract
      * @var array
      */
     protected $_beforeSaveActions = array(
-        'customer_account_editPost',
+        'customer_account_editpost',
         'customer_account_resetpasswordpost'
     );
 
