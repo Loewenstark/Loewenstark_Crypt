@@ -181,6 +181,10 @@ extends Mage_Core_Model_Encryption
      */
     protected function _getCryptByModel($key = null, $extension = 'mcrypt') 
     {
+        if ($extension == $this->_getCryptExtension())
+        {
+            return $this->_getCrypt($key);
+        }
         if (!isset($this->_cryptModel[$extension])) {
             if (null === $key) {
                 $key = (string)Mage::getConfig()->getNode('global/crypt/key');

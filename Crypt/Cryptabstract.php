@@ -4,6 +4,26 @@ class Varien_Crypt_Cryptabstract
 extends Varien_Crypt_Abstract
 {
     /**
+     * Constuctor
+     *
+     * @param array $data
+     */
+    public function __construct(array $data=array())
+    {
+        register_shutdown_function(array($this, 'destruct'));
+        parent::__construct($data);
+    }
+
+    public function destruct()
+    {
+        $this->_reset();
+    }
+
+    protected function _reset()
+    {
+    }
+
+    /**
      * 
      * @param string $key
      * @return boolean

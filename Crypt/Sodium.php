@@ -1,30 +1,21 @@
 <?php
 
-class Varien_Crypt_Openssl
+class Varien_Crypt_Sodium
 extends Varien_Crypt_Cryptabstract
 {
     /**
-     * Initialize openssl module
+     * Initialize sodium module
      *
      * @param string $key cipher private key
-     * @return Varien_Crypt_Openssl
+     * @return Varien_Crypt_Sodium
      */
     public function init($key)
     {
         parent::init($key);
-        if (!$this->getCipher()) {
-            $this->setCipher('aes-256-cbc');
-        }
-
-        if (!$this->getMode()) { // mode is in cipher!
-            $this->setMode($this->getCipher());
-        }
-        
         $this->setKey($key);
-
         return $this;
     }
-
+    
     /**
      * Encrypt data
      *
@@ -36,10 +27,11 @@ extends Varien_Crypt_Cryptabstract
         if (strlen($data) == 0) {
             return $data;
         }
-        $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($this->getCipher()));
-        return base64_encode($iv).':'.base64_encode(openssl_encrypt($data, $this->getCipher(), $this->getKey(),  OPENSSL_RAW_DATA, $iv));
+        $nonce = random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
+        return base64_encode($nonce) . ':'
+                . sodium_crypto_secretbox($data, $nonce, $this->getKey());
     }
-
+    
     /**
      * Decrypt data
      *
@@ -51,15 +43,15 @@ extends Varien_Crypt_Cryptabstract
         if (strlen($data) == 0) {
             return $data;
         }
-        $iv = '';
+        $nonce = '';
         $dec = $data;
         // check if there is salt in
         if (strstr($data, ':'))
         {
-            list($iv, $dec) = explode(':', $data, 2);
-            $iv = base64_decode($iv);
+            list($nonce, $dec) = explode(':', $data, 2);
+            $nonce = base64_decode($nonce);
         }
         unset($data);
-        return openssl_decrypt(base64_decode($dec), $this->getCipher(), $this->getKey(), OPENSSL_RAW_DATA, $iv);
+        return sodium_crypto_secretbox_open($dec, $nonce, $this->getKey());
     }
 }
