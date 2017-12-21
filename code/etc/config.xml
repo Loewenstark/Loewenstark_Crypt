@@ -21,6 +21,7 @@
             <core>
                 <rewrite>
                     <encryption_model>Loewenstark_Crypt_Model_Encryption</encryption_model>
+                    <cookie>Loewenstark_Crypt_Model_Core_Cookie</cookie>
                 </rewrite>
             </core>
         </models>
