@@ -1,6 +1,5 @@
 <?php
 /**
- * 
  * Special thanks to https://www.zimuel.it/slides/phpce2017/
  */
 
@@ -37,8 +36,8 @@ extends Varien_Crypt_Cryptabstract
             throw new Mage_Core_Exception('gcm mode is only possible in PHP7.1');
         }
 
-        if (!$this->getMode()) { // mode is in cipher!
-            $this->setMode($this->getCipher());
+        if (!$this->getMode()) { // option
+            $this->setMode(OPENSSL_RAW_DATA);
         }
 
         $this->setKey($key);
@@ -73,7 +72,7 @@ extends Varien_Crypt_Cryptabstract
                     $data,
                     $this->getCipher(),
                     $this->getKey(),
-                    OPENSSL_RAW_DATA,
+                    $this->getMode(),
                     $iv
                 );
     }
@@ -93,7 +92,7 @@ extends Varien_Crypt_Cryptabstract
                 mb_substr($data, $this->_getIvLength(), null, '8bit'),
                 $this->getCipher(),
                 $this->getKey(),
-                OPENSSL_RAW_DATA,
+                $this->getMode(),
                 mb_substr($data, 0, $this->_getIvLength(), '8bit')
             );
     }
