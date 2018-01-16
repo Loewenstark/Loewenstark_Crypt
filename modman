@@ -1,4 +1,3 @@
-Crypt/Sodium.php                app/code/community/Varien/Crypt/Sodium.php
 Crypt/Openssl.php               app/code/community/Varien/Crypt/Openssl.php
 Crypt/Cryptabstract.php         app/code/community/Varien/Crypt/Cryptabstract.php
 Loewenstark_Crypt.xml           app/etc/modules/Loewenstark_Crypt.xml
