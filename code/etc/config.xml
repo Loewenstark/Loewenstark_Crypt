@@ -26,46 +26,4 @@
             </core>
         </models>
     </global>
-    <adminhtml>
-        <events>
-            <adminhtml_customer_save_after> 
-                <observers>
-                    <ldscrypt>
-                        <type>singleton</type>
-                        <class>ldscrypt/customer_observer</class>
-                        <method>onAdminhtmlCustomerSaveAfter</method>
-                    </ldscrypt >
-                </observers>
-            </adminhtml_customer_save_after>
-        </events>
-    </adminhtml>
-    <frontend>
-        <events>
-            <customer_register_success> 
-                <observers>
-                    <ldscrypt>
-                        <type>singleton</type>
-                        <class>ldscrypt/customer_observer</class>
-                        <method>onCustomerRegisterSuccess</method>
-                    </ldscrypt >
-                </observers>
-            </customer_register_success>
-            <customer_save_before> 
-                <observers>
-                    <ldscrypt>
-                        <type>singleton</type>
-                        <class>ldscrypt/customer_observer</class>
-                        <method>onCustomerSaveBefore</method>
-                    </ldscrypt >
-                </observers>
-            </customer_save_before>
-        </events>
-    </frontend>
-    <default>
-        <customer>
-            <password>
-                <use_strong_password_hash>1</use_strong_password_hash>
-            </password>
-        </customer>
-    </default>
 </config>

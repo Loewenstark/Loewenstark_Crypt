@@ -231,7 +231,7 @@ extends Mage_Core_Model_Encryption
      */
     protected function _canUseArgon2()
     {
-        $canuse = (string)Mage::getConfig()->getNode('global/crypt/use_argon2');
+        $canuse = trim((string)Mage::getConfig()->getNode('global/crypt/use_argon2'));
         if ($canuse == 'true')
         {
             return true;

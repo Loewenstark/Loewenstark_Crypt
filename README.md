@@ -5,7 +5,6 @@ Info
 -----------
 - added Multiple Function about encryption in Magento 1
 - use SHA256 as Hash
-- possibilty to use BCrypt or Argon2 as Customer passwords - Argon2 have to be enabled in the app/etc/local.xml
 - replacement of MCrypt with Openssl
 - default Encyption Model will be MCrypt
 
