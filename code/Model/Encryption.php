@@ -189,10 +189,6 @@ extends Mage_Core_Model_Encryption
             if (null === $key) {
                 $key = (string)Mage::getConfig()->getNode('global/crypt/key');
             }
-            if ($extension == 'mcrypt')
-            {
-                $this->_loadWorkaroundForMcrypt();
-            }
             $this->_cryptModel[$extension] = Varien_Crypt::factory($extension)->init($key);
         }
         return $this->_cryptModel[$extension];
@@ -212,10 +208,6 @@ extends Mage_Core_Model_Encryption
             if (empty($extension))
             {
                 $extension = trim($this->_defaultCryptModel);
-            }
-            if ($extension == 'mcrypt')
-            {
-                $this->_loadWorkaroundForMcrypt();
             }
             $this->_cryptExtension = strtolower($extension);
         }
@@ -262,30 +254,5 @@ extends Mage_Core_Model_Encryption
             list($enc, $value) = explode(':', $data, 2);
         }
         return str_replace("\x0", '', trim($this->_getCryptByModel(null, $enc)->decrypt(base64_decode((string)$value))));
-    }
-
-    /**
-     * mcrypt is marked as DEPRECATED since PHP 7.1
-     * and removed in PHP 7.2
-     * phpseclib does provide an workaround for this
-     * https://github.com/phpseclib/mcrypt_compat
-     * if you encounter an issue with this method
-     * you have to update phpseclib to the version min. 2.0.9
-     */
-    protected function _loadWorkaroundForMcrypt()
-    {
-        if (!defined('MCRYPT_MODE_ECB')) {
-            require_once 'phpseclib'.DS.'Crypt'.DS.'Base.php';
-            require_once 'phpseclib'.DS.'Crypt'.DS.'Rijndael.php';
-            require_once 'phpseclib'.DS.'Crypt'.DS.'Twofish.php';
-            require_once 'phpseclib'.DS.'Crypt'.DS.'Blowfish.php';
-            require_once 'phpseclib'.DS.'Crypt'.DS.'DES.php';
-            require_once 'phpseclib'.DS.'Crypt'.DS.'TripleDES.php';
-            require_once 'phpseclib'.DS.'Crypt'.DS.'RC2.php';
-            require_once 'phpseclib'.DS.'Crypt'.DS.'RC4.php';
-            require_once 'phpseclib'.DS.'Crypt'.DS.'Random.php';
-            $dir = dirname(__DIR__);
-            require_once $dir.DS.'lib'.DS.'mcrypt_compat'.DS.'lib'.DS.'mcrypt.php';
-        }
     }
 }

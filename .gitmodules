@@ -1,3 +1,0 @@
-[submodule "code/lib/mcrypt_compat"]
-	path = code/lib/mcrypt_compat
-	url = https://github.com/phpseclib/mcrypt_compat.git
