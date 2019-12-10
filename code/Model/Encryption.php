@@ -140,7 +140,8 @@ extends Mage_Core_Model_Encryption
     {
         if ($this->isNewer1943())
         {
-            return $this->validateHash($password, $hash);
+            return $this->validateHashByVersion($password, $hash, self::HASH_VERSION_SHA256)
+                    || parent::validateHash($password, $hash);
         }
         $hashArr = explode(':', $hash);
         // without salt
