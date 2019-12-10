@@ -3,6 +3,9 @@
 class Loewenstark_Crypt_Model_Encryption
 extends Mage_Core_Model_Encryption
 {
+    
+    const HASH_VERSION_SHA256 = 256;
+    
     /**
      * get Name of default encryption model
      * 
@@ -24,6 +27,21 @@ extends Mage_Core_Model_Encryption
      */
     protected $_cryptModel = array();
 
+    /**
+     * model array of used Crypt Models
+     * 
+     * @var string
+     */
+    protected $_is_newer1943 = false;
+
+    /**
+     * check if const exists
+     */
+    public function __construct()
+    {
+        $this->_is_newer1943 = defined(get_class($this).'::HASH_VERSION_MD5');
+    }
+    
     /**
      * hash string with md5
      * 
@@ -101,8 +119,12 @@ extends Mage_Core_Model_Encryption
      * 
      * @return string
      */
-    public function hash($data)
+    public function hash($data, $version = null)
     {
+        if ($this->isNewer1943() && $version == self::HASH_VERSION_MD5
+        ) {
+            return parent::hash($data, $version);
+        }
         return $this->hashBySha256($data);
     }
 
@@ -116,6 +138,10 @@ extends Mage_Core_Model_Encryption
      */
     public function validateHash($password, $hash)
     {
+        if ($this->isNewer1943())
+        {
+            return $this->validateHash($password, $hash);
+        }
         $hashArr = explode(':', $hash);
         // without salt
         if (count($hashArr) == 1)
@@ -138,6 +164,41 @@ extends Mage_Core_Model_Encryption
             return false;
         }
         Mage::throwException('Invalid hash.');
+    }
+    
+    /**
+     * Validate hash by specified version
+     *
+     * added sha256
+     * 
+     * @param string $password
+     * @param string $hash
+     * @param int $version
+     * @return bool
+     */
+    public function validateHashByVersion($password, $hash, $version = null)
+    {
+        if (!$this->isNewer1943())
+        {
+            return false;
+        }
+        if (is_null($version))
+        {
+            $version = self::HASH_VERSION_MD5;
+        }
+        if ($version == self::HASH_VERSION_SHA256)
+        {
+            $hashArr = explode(':', $hash);
+            // without salt
+            if (count($hashArr) == 1)
+            {
+                return ($this->hashBySha256($password) === $hash);
+            } elseif(count($hashArr) == 2)
+            {
+                return ($this->hashBySha256($hashArr[1] . $password) === $hashArr[0]);
+            }
+        }
+        return parent::validateHashByVersion($password, $hash, $version);
     }
 
     /**
@@ -254,5 +315,14 @@ extends Mage_Core_Model_Encryption
             list($enc, $value) = explode(':', $data, 2);
         }
         return str_replace("\x0", '', trim($this->_getCryptByModel(null, $enc)->decrypt(base64_decode((string)$value))));
+    }
+
+    /**
+     * 
+     * @return bool
+     */
+    public function isNewer1943()
+    {
+        return $this->_is_newer1943;
     }
 }
