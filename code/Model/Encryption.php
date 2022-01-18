@@ -138,13 +138,15 @@ extends Mage_Core_Model_Encryption
      */
     public function validateHash($password, $hash)
     {
-        if ($this->isNewer1943())
+        $password_verify = false;
+        if(substr($hash, 0, 1) === '$')
         {
-            $return = parent::validateHash($password, $hash);
-            if ($return)
-            {
-                return $return;
-            }
+            $password_verify = true;
+        }
+        if ($this->isNewer1943() && !$password_verify)
+        {
+            return $this->validateHashByVersion($password, $hash, self::HASH_VERSION_SHA256)
+                    || parent::validateHash($password, $hash);
         }
         $hashArr = explode(':', $hash);
         // without salt
@@ -169,7 +171,7 @@ extends Mage_Core_Model_Encryption
         }
         Mage::throwException('Invalid hash.');
     }
-    
+
     /**
      * Validate hash by specified version
      *
